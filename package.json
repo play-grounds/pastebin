@@ -1,0 +1,56 @@
+{
+  "name": "nosdav_pastebin",
+  "version": "0.0.1",
+  "description": "A decentralized pastebin application built on the Nostr protocol with advanced cloud storage capabilities, syntax highlighting, and privacy-focused design.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "pastebin",
+    "nostr",
+    "decentralized",
+    "privacy",
+    "nosdav",
+    "webdav",
+    "code-sharing",
+    "syntax-highlighting",
+    "preact",
+    "did",
+    "storage",
+    "paste",
+    "sharing"
+  ],
+  "author": "play-grounds",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/play-grounds/pastebin.git"
+  },
+  "homepage": "https://play-grounds.github.io/pastebin",
+  "bugs": {
+    "url": "https://github.com/play-grounds/pastebin/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "files": [
+    "index.html",
+    "index.js",
+    "navbar.js",
+    "storage-config.js",
+    "nosdav-shim.js",
+    "README.md",
+    "LICENSE"
+  ]
+}

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decentralized Pastebin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add syntax highlighting support -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --primary-light: #dbeafe;
+        --secondary: #64748b;
+        --accent: #10b981;
+        --text-light: #ffffff;
+        --text-dark: #1e293b;
+        --card-bg: #f8fafc;
+        --body-bg: #f1f5f9;
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --radius-sm: 6px;
+        --radius-md: 12px;
+        --code-bg: #f6f8fa;
+        --border-color: #e2e8f0;
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          var(--primary-light) 0%,
+          #e0e7ff 100%
+        );
+        min-height: 100vh;
+        color: var(--text-dark);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+          sans-serif;
+      }
+
+      .paste-container {
+        background-color: var(--card-bg);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-color);
+      }
+
+      .paste-item {
+        transition: all 0.3s ease;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-color);
+      }
+
+      .paste-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+        background-color: white;
+        border-color: var(--accent);
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: var(--text-light);
+        padding: 1rem 1.5rem;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: var(--text-light);
+        transition: all 0.2s ease;
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .btn-primary:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background: var(--secondary);
+        color: var(--text-light);
+        transition: all 0.2s ease;
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .btn-secondary:hover {
+        opacity: 0.9;
+      }
+
+      /* Text area styling */
+      .paste-textarea {
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 1rem;
+        resize: vertical;
+        min-height: 300px;
+        background-color: var(--code-bg);
+      }
+
+      .paste-textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+      }
+
+      /* Custom select styling */
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%232563eb'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1rem;
+        padding-right: 2.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+      }
+
+      select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+        outline: none;
+      }
+
+      /* Code highlighting styles */
+      .hljs {
+        background: var(--code-bg) !important;
+        border-radius: var(--radius-sm);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      /* Input styling */
+      input[type='text'],
+      input[type='url'] {
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 0.5rem 0.75rem;
+        font-size: 14px;
+      }
+
+      input[type='text']:focus,
+      input[type='url']:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+      }
+
+      /* Language selector */
+      .language-selector {
+        background-color: white;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 0.375rem 0.75rem;
+        font-size: 14px;
+      }
+
+      /* Mobile responsive improvements */
+      @media (max-width: 768px) {
+        .paste-textarea {
+          min-height: 200px;
+          font-size: 16px; /* Prevent zoom on iOS */
+        }
+
+        .btn-primary,
+        .btn-secondary {
+          padding: 0.75rem 1rem;
+          font-size: 14px;
+        }
+
+        /* Ensure buttons don't get too small */
+        .action-button {
+          min-width: 44px;
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Improve touch targets */
+        button,
+        input,
+        select,
+        textarea {
+          min-height: 44px;
+        }
+
+        /* Better spacing on mobile */
+        .mobile-stack {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .mobile-stack > * {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .header {
+          padding: 1rem;
+        }
+
+        .paste-container {
+          margin: 0.5rem;
+          border-radius: var(--radius-sm);
+        }
+
+        /* Stack buttons vertically on very small screens */
+        .button-group-mobile {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          width: 100%;
+        }
+
+        .button-group-mobile button {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="index.js" type="module"></script>
+  </body>
+</html>
